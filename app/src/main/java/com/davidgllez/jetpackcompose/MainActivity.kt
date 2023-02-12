@@ -1,7 +1,9 @@
 package com.davidgllez.jetpackcompose
 
 import FakeDatabase
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Space
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,37 +13,76 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.davidgllez.jetpackcompose.ui.theme.JetpackComposeSection7Theme
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackComposeSection7Theme {
                 // A surface container using the 'background' color from the theme
-                Surface(
+                /*Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     //ListBasic(FakeDatabase.getAllFilms())
                     ListAdvance(FakeDatabase.getAllFilms())
-                }
+                }*/
+                Scaffold(
+                    bottomBar = { BottomAppBarList()},
+                    content = {
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = it.calculateBottomPadding())) {
+                            ListAdvance(FakeDatabase.getAllFilms())
+                        }
+                })
             }
         }
     }
 }
+
+@Composable
+fun BottomAppBarList() {
+    BottomAppBar {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+            }
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "Cart")
+        }
+
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Option")
+        }
+    }
+}
+
 @Composable
 fun ListAdvance(allFilms: List<Film>) {
     //Actual context
@@ -83,10 +124,25 @@ fun ItemListAdvance(film: Film, modifier: Modifier) {
                         .clip(
                             CircleShape
                         )
-                        .border(BorderStroke(
-                            dimensionResource(id = R.dimen.list_item_img_stroke), color = Color.Blue
-                        ), CircleShape))
+                        .border(
+                            BorderStroke(
+                                dimensionResource(id = R.dimen.list_item_img_stroke),
+                                color = Color.Blue
+                            ), CircleShape
+                        ))
                 //Icon(imageVector = Icons.Filled.Star, contentDescription = null)
+            }, trailing = { //Movie score
+                Box(modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(top = dimensionResource(id = R.dimen.common_padding_default)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(imageVector = Icons.Rounded.Star, contentDescription = null,
+                        tint = colorResource(id = R.color.list_item_trailing),
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.list_item_trailing)))
+                    Text(text = "${film.score}", fontSize = 10.sp)
+                }
             }
         )
         Divider()

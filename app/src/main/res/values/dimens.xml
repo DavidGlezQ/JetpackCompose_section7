@@ -3,4 +3,5 @@
     <dimen name="common_padding_default">16dp</dimen>
     <dimen name="list_item_img_size">48dp</dimen>
     <dimen name="list_item_img_stroke">1dp</dimen>
+    <dimen name="list_item_trailing">40dp</dimen>
 </resources>
