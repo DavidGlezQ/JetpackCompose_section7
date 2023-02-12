@@ -6,4 +6,4 @@ package com.davidgllez.jetpackcompose
 data class Film(val name: String,
                 val description: String,
                 val score: Float,
-                val photo: String)
+                val photoURL: String)
